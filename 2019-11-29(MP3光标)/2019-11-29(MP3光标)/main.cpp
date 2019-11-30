@@ -1,34 +1,27 @@
 #include<iostream>
-#include<list>
 #include<string>
 using namespace std;
 class Solution {
 public:
 	void fun(int num, string& s) {
-		list<int> l(num);
-		int n = 1;
-		for (auto& i : l) {
-			i = n++; 
-		}
-		int flag = 1;
+		int n, flag = 1, i = 0;
 		num >= 4 ? n = 4 : n = num;
-		auto i = l.begin();
 		for (auto&c : s) {
 			if (c == 'U') {
 				flag == 1 ? flag : --flag;
-				i == l.begin() ? flag = n, i = --l.end() : --i;
+				i == 0 ? flag = n, i = num - 1 : --i;
 			}
 			else if (c == 'D') {
 				flag == n ? flag : ++flag;
-				i == --l.end() ? flag = 1, i = l.begin(): ++i;
+				i == num - 1 ? flag = 1, i = 0 : ++i;
 			}
 		}
-		auto f = i;
-		while (--flag) --i; 
-		for (int j = 0; j < 4 && i != l.end(); ++j, ++i) { 
-			cout << *i << ' ';
+		int f = i;
+		while (--flag) --i;
+		for (int j = 0; j < 4 && i < num; ++j) {
+			cout << ++i << ' ';
 		}
-		cout << endl << *f << endl;
+		cout << endl << f + 1 << endl;
 	}
 };
 int main() {
