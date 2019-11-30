@@ -1,0 +1,8 @@
+﻿  main.cpp
+c:\test\c++\2019-9-12(模板test)\2019-9-12(模板test)\main.cpp(11): error C2672: “Add”: 未找到匹配的重载函数
+c:\test\c++\2019-9-12(模板test)\2019-9-12(模板test)\main.cpp(11): error C2782: “T Add(T,T)”: 模板 参数“T”不明确
+  c:\test\c++\2019-9-12(模板test)\2019-9-12(模板test)\main.cpp(5): note: 参见“Add”的声明
+  c:\test\c++\2019-9-12(模板test)\2019-9-12(模板test)\main.cpp(11): note: 可能是“double”
+  c:\test\c++\2019-9-12(模板test)\2019-9-12(模板test)\main.cpp(11): note: 或    “char”
+c:\test\c++\2019-9-12(模板test)\2019-9-12(模板test)\main.cpp(11): error C2784: “T Add(T,T)”: 未能从“double”为“T”推导 模板 参数
+  c:\test\c++\2019-9-12(模板test)\2019-9-12(模板test)\main.cpp(5): note: 参见“Add”的声明

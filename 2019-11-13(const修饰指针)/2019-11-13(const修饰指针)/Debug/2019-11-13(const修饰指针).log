@@ -1,0 +1,5 @@
+﻿  main.c
+c:\c++\cpulspuls\2019-11-13(const修饰指针)\2019-11-13(const修饰指针)\main.c(56): error C2166: 左值指定 const 对象
+c:\c++\cpulspuls\2019-11-13(const修饰指针)\2019-11-13(const修饰指针)\main.c(57): error C2166: 左值指定 const 对象
+c:\c++\cpulspuls\2019-11-13(const修饰指针)\2019-11-13(const修饰指针)\main.c(66): error C2166: 左值指定 const 对象
+c:\c++\cpulspuls\2019-11-13(const修饰指针)\2019-11-13(const修饰指针)\main.c(67): error C2166: 左值指定 const 对象

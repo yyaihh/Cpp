@@ -1,0 +1,8 @@
+﻿  main.cpp
+c:\c++\cpulspuls\project1\project1\main.cpp(49): warning C4244: “=”: 从“double”转换到“int”，可能丢失数据
+c:\c++\cpulspuls\project1\project1\main.cpp(53): warning C4244: “=”: 从“double”转换到“int”，可能丢失数据
+c:\c++\cpulspuls\project1\project1\main.cpp(77): warning C4244: “=”: 从“double”转换到“int”，可能丢失数据
+c:\c++\cpulspuls\project1\project1\main.cpp(81): warning C4244: “=”: 从“double”转换到“int”，可能丢失数据
+c:\c++\cpulspuls\project1\project1\main.cpp(102): warning C4244: “=”: 从“double”转换到“int”，可能丢失数据
+c:\c++\cpulspuls\project1\project1\main.cpp(250): warning C4018: “<”: 有符号/无符号不匹配
+  Project1.vcxproj -> C:\C++\cpulspuls\Project1\Debug\Project1.exe

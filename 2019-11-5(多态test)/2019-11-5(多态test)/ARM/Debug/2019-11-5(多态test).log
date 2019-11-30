@@ -1,0 +1,5 @@
+﻿  test.cpp
+  协变.cpp
+  析构重写.cpp
+  正在生成代码...
+ARM\Debug\test.obj : fatal error LNK1112: 模块计算机类型“x86”与目标计算机类型“ARM”冲突

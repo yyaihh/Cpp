@@ -1,0 +1,23 @@
+﻿  main.cpp
+c:\vs2017\vc\tools\msvc\14.16.27023\include\xstddef(127): error C2676: 二进制“>”:“const _Ty”不定义该运算符或到预定义运算符可接收的类型的转换
+          with
+          [
+              _Ty=PCB
+          ]
+  c:\vs2017\vc\tools\msvc\14.16.27023\include\xstddef(126): note: 编译 类 模板 成员函数 "bool std::greater<PCB>::operator ()(const _Ty &,const _Ty &) const" 时
+          with
+          [
+              _Ty=PCB
+          ]
+  c:\vs2017\vc\tools\msvc\14.16.27023\include\xutility(1110): note: 参见对正在编译的函数 模板 实例化“bool std::greater<PCB>::operator ()(const _Ty &,const _Ty &) const”的引用
+          with
+          [
+              _Ty=PCB
+          ]
+  c:\vs2017\vc\tools\msvc\14.16.27023\include\type_traits(1049): note: 参见对正在编译的 类 模板 实例化 "std::greater<PCB>" 的引用
+  c:\vs2017\vc\tools\msvc\14.16.27023\include\queue(247): note: 查看指向正在编译的变量模板“const bool is_nothrow_default_constructible_v<std::greater<PCB> >”的引用
+  c:\c++\cpulspuls\进程调度cpp\进程调度cpp\main.cpp(27): note: 参见对正在编译的 类 模板 实例化 "std::priority_queue<PCB,std::vector<PCB,std::allocator<_Ty>>,std::greater<_Ty>>" 的引用
+          with
+          [
+              _Ty=PCB
+          ]
