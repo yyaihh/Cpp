@@ -1,7 +1,14 @@
+<<<<<<< HEAD
 # C++
 
 #### Description
 cpulspuls
+=======
+# Cpp
+
+#### Description
+{**When you're done, you can delete the content in this README and update the file with details for others getting started with your repository**}
+>>>>>>> 785393365958f1384fc4bb39054fead693579c40
 
 #### Software Architecture
 Software architecture description
