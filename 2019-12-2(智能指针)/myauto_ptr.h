@@ -1,12 +1,13 @@
 #pragma once
+#pragma once
 template<class T>
-class Smart_Ptr {
+class Auto_ptr {
 	T* m_ptr;
 public:
-	Smart_Ptr(T* ptr = nullptr)
-		:m_ptr(ptr) 
+	Auto_ptr(T* ptr = nullptr)
+		:m_ptr(ptr)
 	{}
-	~Smart_Ptr() {
+	~Auto_ptr() {
 		if (m_ptr) {
 			delete m_ptr;
 			m_ptr = nullptr;
