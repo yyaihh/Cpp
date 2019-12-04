@@ -1,60 +1,84 @@
 #include<iostream>
 #include<queue>
 #include<string>
-#include<vector>
-#include<functional>
-#include<list>
 using namespace std;
 class PCB {
 	static int id;
 public:
 	string m_pname;
-	int Tarrive;//到达时间
-	int Tservice;//服务时间
-	int Tsurplus;//剩余时间
-	int Tstart;//开始时间
-	int Taccomplish;//完成时间
-	int prio;//优先级---数字越大优先级越高
-	int if_finish;//进程是否完成
-	int num;//进程个数
+	int arrtime = 0;//到达时间
+	int sertime = 0;//服务时间
+	int sertime2 = 0;//服务时间
+	int fintime = 0;//完成时间
+	int turntime = 0;//周转时间
+	double Turntime = 0;//带权周转时间
+	bool if_finish = false;//进程是否完成
 	bool operator >(const PCB& p)const {
-		return this->Tarrive > p.Tarrive;
+		return this->arrtime > p.arrtime;
 	}
 };
-priority_queue<PCB, vector<PCB>, greater<PCB>> fcfs(vector<PCB>& vp) {
-	priority_queue<PCB, vector<PCB>, greater<PCB>> pq(vp.rbegin(), vp.rend());
-	return pq;
+void print(const PCB& p) {
+	cout << p.m_pname << "\t" << p.arrtime << "\t" << "   " << p.sertime << "\t\t" << p.fintime << "\t" << p.turntime << "\t\t";
+	printf("%.2f\n", p.Turntime);
 }
-list<PCB> RR(priority_queue<PCB, vector<PCB>, greater<PCB>>& pq) { 
-	list<PCB> l;
-	size_t T;
+void print_(const PCB& p) {
+	cout << p.m_pname << "\t" << p.arrtime << "\t" << "   " << p.sertime << "\t\t" << p.fintime << endl;
+}
+void Sort(vector<PCB>& vp, int n) {
+	for (int i = 0; i < n; ++i) {
+		for (int j = 0; j < n - i - 1; ++j) {
+			if (vp[j].arrtime > vp[j + 1].arrtime) {
+				swap(vp[j], vp[j + 1]);
+			}
+		}
+	}
+}
+vector<PCB> fcfs(vector<PCB>& vp, int n) {
+	vector<PCB> v = vp;
+	Sort(v, n);
+	int ftime = vp[0].arrtime;
+	for (int i = 0; i < n; ++i) {
+		PCB& p = v[i];
+		p.fintime = p.sertime + ftime;
+		ftime = p.fintime;
+	}
+	return v;
+}
+vector<PCB> RR(vector<PCB>& vp, int n) {
+	deque<PCB> cq;
+	vector<PCB> v;
+	int T, time = 0, tsum = 0;
+	double Tsum = 0;
 	cout << "请输入时间片\n";
 	cin >> T;
-	while (!pq.empty()) {
-		l.push_back(pq.top());
-		pq.pop();
+	for (auto& i : vp) cq.push_back(i);
+	while (!cq.empty()) {
+		time += T;
+		PCB& tmp = cq.front();
+		tmp.sertime2 -= T;
+		cq.pop_front();
+		if (tmp.sertime2 > 0) {
+			cq.push_back(tmp);
+		}
+		else {
+			tmp.sertime2 == 0 ? tmp.fintime = time : time += tmp.sertime2, tmp.fintime = time;
+			tmp.turntime = tmp.fintime - tmp.arrtime;
+			tmp.Turntime = (double)tmp.turntime / (double)tmp.sertime;
+			Tsum += tmp.Turntime;
+			tsum += tmp.turntime;
+			v.push_back(tmp);
+		}
 	}
-	for (auto i = l.begin(); !l.empty(); ++i) {
-
-	}
-}
-void print(const PCB& p) {
-	cout << "进程名" << "\t" << "到达时间" << "\t" << "服务时间" << "\t" << "完成时间" << endl;
-	cout << p.m_pname << '\t' << p.Tarrive << "\t\t" << p.Tservice << "\t\t" << p.Taccomplish<<endl;
-}
-void print2(int num){
-	cout << "进程名" << "\t" << "到达时间" << "\t" << "服务时间" << "\t" << "完成时间" << endl;
-	for (int i = 0; i < num; i++){
-		
-	}
+	printf("周转时间的平均值是 : %.2f\n", tsum / (double)n);
+	printf("带权周转时间的平均值是 : %.2f\n", Tsum / n);
+	cout << "进程名" << "  " << "到达时间" << " " << "服务时间" << "  " << "完成时间" << "  " << "周转时间" << "  " << "带权周转时间" << endl;
+	return v;
 }
 int MENU() {
 	int n;
-	cout << "—————————————————————————" << endl;
 	cout << "——————————1、FCFS算法 —————————" << endl;
 	cout << "——————————2、RR算法 ——————————" << endl;
 	cout << "——————————0、退出 ———————————" << endl;
-	cout << "—————————————————————————" << endl;
 	cin >> n;
 	return n;
 }
@@ -62,8 +86,9 @@ void input(vector<PCB>& vp) {
 	for (auto& i : vp) {
 		cout << "请输入进程名、到达时间、服务时间" << endl;
 		cin >> i.m_pname;
-		cin >> i.Tarrive;
-		cin >> i.Tservice;
+		cin >> i.arrtime;
+		cin >> i.sertime;
+		i.sertime2 = i.sertime;
 	}
 }
 int main() {
@@ -72,18 +97,15 @@ int main() {
 	cin >> num;
 	vector<PCB> vp(num);
 	input(vp);
-	priority_queue<PCB, vector<PCB>, greater<PCB>> pq1 = fcfs(vp);
-	priority_queue<PCB, vector<PCB>, greater<PCB>> pq2 = pq1;
+	Sort(vp, num);
 	while (1) {
 		switch (MENU()) {
 		case 1:
-			while (!pq1.empty()) {
-				print(pq1.top());
-				pq1.pop();
-			}
+			cout << "进程名" << "  " << "到达时间" << " " << "服务时间" << "  " << "完成时间" << "  " <<endl;
+			for (auto& i : fcfs(vp, num)) print_(i);
 			break;
 		case 2:
-			
+			for (auto& i : RR(vp, num)) print(i);
 			break;
 		case 0:
 			cout << "退出!\n";
