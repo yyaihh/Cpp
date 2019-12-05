@@ -5,9 +5,13 @@ int main() {
 	for (int i = 0; i < 10; ++i) {
 		cq.push(i + 1);
 	}
-	for (int i = 0; i < 10; ++i) {
-		cout << cq.front() << ' ';
+	int tmp;
+	for (int i = 0;!cq.empty(); ++i) {
+		tmp = cq.front();
+		cout << tmp << ' ';
 		cq.pop();
+		cq.push(tmp);
 	}
+	system("pause");
 	return 0;
 }
