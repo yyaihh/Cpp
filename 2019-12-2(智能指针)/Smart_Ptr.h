@@ -9,13 +9,16 @@ public:
 	~Smart_Ptr() {
 		if (m_ptr) {
 			delete m_ptr;
-			m_ptr = nullptr;
+			//m_ptr = nullptr;
 		}
 	}
 	T& operator*() {
 		return *m_ptr;
 	}
 	T* operator->() {
+		return m_ptr;
+	}
+	T* get() {
 		return m_ptr;
 	}
 };
