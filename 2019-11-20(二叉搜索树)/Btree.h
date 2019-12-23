@@ -34,7 +34,7 @@ public:
 	~Btree() {
 		destroy(m_root);
 	}
-	bool insert(const T& val) {
+	bool insert(const T& val) {//插入
 		TreeNode<T>* newp = new TreeNode<T>;
 		newp->m_data = val;
 		if (m_root == nullptr) {
@@ -64,10 +64,25 @@ public:
 		}
 		return true;
 	}
+	TreeNode<T>* find(const T& val) {
+		TreeNode<T>* cur = m_root;
+		while (cur) {//先找要删哪个
+			if (val > cur->m_data) {
+				cur = cur->m_right;
+			}
+			else if (val < cur->m_data) {
+				cur = cur->m_left;
+			}
+			else {
+				return cur;
+			}
+		}
+		return nullptr;
+	}
 	bool erase(const T& val) {
 		TreeNode<T>* pre = m_root;
 		TreeNode<T>* cur = m_root;
-		while (cur) {
+		while (cur) {//先找要删哪个
 			if (val > cur->m_data) {
 				pre = cur;
 				cur = cur->m_right;
@@ -80,12 +95,12 @@ public:
 				break;
 			}
 		}
-		if (cur == nullptr) {
+		if (cur == nullptr) {//没找到则说明没有这个节点
 			return false;
 		}
 		TreeNode<T>* cur2 = cur->m_left;
 		TreeNode<T>* pre2 = cur2;
-		if (cur->m_left == nullptr) {//左右孩子都为空或者左孩子为空两种情况
+		if (cur->m_left == nullptr) {//左右孩子都为空或者左孩子为空两种情况(情况1+情况2)
 			if (pre == m_root) {
 				m_root = cur->m_right;
 			}
@@ -98,7 +113,7 @@ public:
 				}
 			}
 		}
-		else if (cur->m_right == nullptr) {//右孩子为空
+		else if (cur->m_right == nullptr) {//右孩子为空(情况3)
 			if (pre == m_root) {
 				m_root = cur->m_left;
 			}
@@ -111,7 +126,7 @@ public:
 				}
 			}
 		}
-		else {//左右孩子都不为空
+		else {//左右孩子都不为空(情况4)(指针替换, 提高性能)
 			if (cur->m_right) {
 				for (; cur2->m_right; pre2 = cur2, cur2 = cur2->m_right);
 				pre2->m_right = cur2->m_left;//将自己的左孩子托付给父亲, 让父亲把他作为右孩子

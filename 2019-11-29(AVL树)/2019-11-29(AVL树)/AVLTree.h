@@ -10,7 +10,7 @@ class TreeNode {
 	TreeNode<T>* m_left;
 	TreeNode<T>* m_right;
 	TreeNode<T>* m_parent;
-	int m_bf;
+	int m_bf;//平衡因子
 public:
 	TreeNode(const T& data = T())
 		:m_data(data), m_left(nullptr), m_bf(0),
@@ -168,7 +168,7 @@ public:
 			pre->m_left = newp;
 		}
 		newp->m_parent = pre;//往前也接上
-		TreeNode<T>* cur = newp;
+		 cur = newp;
 		while (pre) {
 			if (pre->m_left == newp) {//新节点是左子树
 				pre->m_bf--;
@@ -180,7 +180,7 @@ public:
 				break;
 			}
 			else { //m_bf绝对值只能小于2
-				if (pre->m_buf == -1 || pre->m_buf == 1) {
+				if (pre->m_bf == -1 || pre->m_bf == 1) {
 					//若平衡因子满足条件, 继续向上判断
 					cur = pre;
 					pre = pre->m_parent;
