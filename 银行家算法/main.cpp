@@ -6,6 +6,7 @@ int main() {
 	while (cin >> n) {
 		if (n == 1) {
 			b.input();
+			b.print();
 		}
 		else if (n == 2) {
 			b.Banker_Algorithm();
@@ -20,4 +21,3 @@ int main() {
 	}
 	return 0;
 }
-

@@ -9,7 +9,7 @@ class Banker {
 	int m_n, m_m;
 public:
 	void init() {
-		m_Available.resize(m_m);
+		m_Available.resize(m_m); //可用剩余资源
 		m_Max.resize(m_n, vector<int>(m_m));
 		m_Allocation.resize(m_n, vector<int>(m_m, 0));
 		m_Need.resize(m_n, vector<int>(m_m));
