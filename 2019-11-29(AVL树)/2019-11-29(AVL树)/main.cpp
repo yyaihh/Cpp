@@ -3,6 +3,7 @@
 using namespace std;
 int main() {
 	AVLTtree<int> AVL;
+	Print<int> p;
 	AVL.insert(10);
 	AVL.insert(9);
 	AVL.insert(8);
@@ -13,7 +14,7 @@ int main() {
 	AVL.insert(3);
 	AVL.insert(2);
 	AVL.insert(1);
-	AVL.InorderPrint();
+	p.InorderPrint(AVL.getroot());
 	system("pause");
 	return 0;
 }
