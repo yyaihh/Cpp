@@ -16,7 +16,10 @@
 //		m_right(nullptr)
 //	{}
 //	template <class T>
-//	friend class Btree
+//	friend class Btree;
+//
+//	template <class T>
+//	friend class Print;
 //};
 //template <class T>
 //class Btree {
@@ -34,6 +37,9 @@
 //	{}
 //	~Btree() {
 //		destroy(m_root);
+//	}
+//	TreeNode<T>* getRoot() {
+//		return m_root;
 //	}
 //	bool insert(const T& val) {
 //		TreeNode<T>* newp = new TreeNode<T>;
@@ -87,11 +93,11 @@
 //		TreeNode<T>* cur2 = cur->m_left;
 //		TreeNode<T>* pre2 = cur2;
 //		if (cur->m_left == nullptr) {//左右孩子都为空或者左孩子为空两种情况
-//			if (pre == m_root) {
+//			if (cur == m_root) {
 //				m_root = cur->m_right;
 //			}
 //			else {
-//				if (cur->m_data < pre->m_data) {
+//				if (cur == pre->m_left) {
 //					pre->m_left = cur->m_right;
 //				}
 //				else {
@@ -100,20 +106,20 @@
 //			}
 //		}
 //		else if (cur->m_right == nullptr) {//右孩子为空
-//			if (pre == m_root) {
+//			if (cur == m_root) {
 //				m_root = cur->m_left;
 //			}
 //			else {
-//				if (cur->m_data > pre->m_data) {
-//					pre->m_right = cur->m_left;
+//				if (cur == pre->m_left) {
+//					pre->m_left = cur->m_left;
 //				}
 //				else {
-//					pre->m_left = cur->m_left;
+//					pre->m_right = cur->m_left;
 //				}
 //			}
 //		}
 //		else {//左右孩子都不为空
-//			if (cur->m_right) {
+//			if (cur2->m_right) {
 //				for (; cur2->m_right; pre2 = cur2, cur2 = cur2->m_right);
 //				pre2->m_right = cur2->m_left;//将自己的左孩子托付给父亲, 让父亲把他作为右孩子
 //			}
@@ -123,10 +129,18 @@
 //		delete cur;
 //		return true;
 //	}
-//	void InorderPrint() {
+//};
+//template<class T>
+//class Print {
+//public:
+//	void InorderPrint(TreeNode<T>* root) {
 //		stack<TreeNode<T>*> s;
 //		vector<T> res;
-//		TreeNode<T>* cur = m_root;
+//		TreeNode<T>* cur = root;
+//		if (!cur) {
+//			cout << "空树\n";
+//			return;
+//		}
 //		while (cur) {
 //			for (; cur; cur = cur->m_left) {
 //				s.push(cur);

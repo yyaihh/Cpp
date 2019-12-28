@@ -16,6 +16,9 @@ public:
 	{}
 	template <class T>
 	friend class Btree;
+
+	template <class T>
+	friend class Print;
 };
 template <class T>
 class Btree {
@@ -33,6 +36,9 @@ public:
 	{}
 	~Btree() {
 		destroy(m_root);
+	}
+	TreeNode<T>* getRoot() {
+		return m_root;
 	}
 	bool insert(const T& val) {//插入
 		TreeNode<T>* newp = new TreeNode<T>;
@@ -98,14 +104,12 @@ public:
 		if (cur == nullptr) {//没找到则说明没有这个节点
 			return false;
 		}
-		TreeNode<T>* cur2 = cur->m_left;
-		TreeNode<T>* pre2 = cur2;
 		if (cur->m_left == nullptr) {//左右孩子都为空或者左孩子为空两种情况(情况1+情况2)
-			if (pre == m_root) {
+			if (cur == m_root) {
 				m_root = cur->m_right;
 			}
 			else {
-				if (cur->m_data < pre->m_data) {
+				if (cur == pre->m_left) {
 					pre->m_left = cur->m_right;
 				}
 				else {
@@ -114,11 +118,11 @@ public:
 			}
 		}
 		else if (cur->m_right == nullptr) {//右孩子为空(情况3)
-			if (pre == m_root) {
+			if (cur == m_root) {
 				m_root = cur->m_left;
 			}
 			else {
-				if (cur->m_data > pre->m_data) {
+				if (cur == pre->m_right) {
 					pre->m_right = cur->m_left;
 				}
 				else {
@@ -127,37 +131,44 @@ public:
 			}
 		}
 		else {//左右孩子都不为空(情况4)(指针替换, 提高性能)
-			if (cur->m_right) {
+			TreeNode<T>* cur2 = cur->m_left;
+			TreeNode<T>* pre2 = cur2;
+			if (cur2->m_right) {
 				for (; cur2->m_right; pre2 = cur2, cur2 = cur2->m_right);
+				//找到要删除节点的左孩子的最右子孙, 让其代替要删除节点
+				//也就是中序的第一个节点
 				pre2->m_right = cur2->m_left;//将自己的左孩子托付给父亲, 让父亲把他作为右孩子
 				cur2->m_left = cur->m_left;
 			}
 			cur2->m_right = cur->m_right;
-			if (cur->m_data < pre->m_data) {
-				if (pre == m_root) {
-					m_root = cur2;
-				}
-				else {
-					pre->m_left = cur2;
-				}
+			if (cur == m_root) {
+				m_root = cur2;
 			}
 			else {
-				if (pre == m_root) {
-					m_root = cur2;
+				if (cur == pre->m_left) {
+					pre->m_left = cur2;
 				}
 				else {
 					pre->m_right = cur2;
 				}
 			}
-
 		}
 		delete cur;
 		return true;
 	}
-	void InorderPrint() {
+};
+
+template<class T>
+class Print {
+public:
+	void InorderPrint(TreeNode<T>* root) {
 		stack<TreeNode<T>*> s;
 		vector<T> res;
-		TreeNode<T>* cur = m_root;
+		TreeNode<T>* cur = root;
+		if (!cur) {
+			cout << "空树\n";
+			return;
+		}
 		while (cur) {
 			for (; cur; cur = cur->m_left) {
 				s.push(cur);
