@@ -17,6 +17,7 @@ public:
 	{}
 	template <class T>
 	friend class AVLTtree;
+
 	template <class T>
 	friend class Print;
 };
@@ -199,21 +200,78 @@ public:
 	}
 	bool erase(const T &val) {
 		TreeNode<T>* cur = m_root;
-		TreeNode<T>* pre = nullptr;
+		TreeNode<T>* pre = m_root;
 		while (cur) {
-			pre = cur;
 			if (val < cur->m_data) {
+				//pre->m_bf++;
+				pre = cur;//不能放在if外面
 				cur = cur->m_left;
 			}
 			else if (val > cur->m_data) {
+				//pre->m_bf--;
+				pre = cur;
 				cur = cur->m_right;
 			}
 			else {
-				return false;//没找到
+				break;
 			}
 		}
 
+		if (cur == nullptr) {
+			return false;
+		}
 
+		if (cur->m_left == nullptr) {//左右孩子都为空或者左孩子为空两种情况(情况1+情况2)
+			if (cur == m_root) {
+				m_root = cur->m_right;
+			}
+			else {
+				if (cur == pre->m_left) {
+					pre->m_left = cur->m_right;
+				}
+				else {
+					pre->m_right = cur->m_right;
+				}
+			}
+		}
+		else if (cur->m_right == nullptr) {//右孩子为空(情况3)
+			if (cur == m_root) {//cur为根节点
+				m_root = cur->m_left;
+			}
+			else {
+				if (cur->m_data > pre->m_data) {
+					pre->m_right = cur->m_left;
+				}
+				else {
+					pre->m_left = cur->m_left;
+				}
+			}
+		}
+		else {//左右孩子都不为空(情况4)(指针替换, 提高性能)
+			TreeNode<T>* cur2 = cur->m_left;
+			TreeNode<T>* pre2 = cur2;
+			if (cur2->m_right) {
+				for (; cur2->m_right; pre2 = cur2, cur2 = cur2->m_right);
+				//找到要删除节点的左孩子的最右子孙, 让其代替要删除节点
+				//也就是中序的第一个节点
+				pre2->m_right = cur2->m_left;//将自己的左孩子托付给父亲, 让父亲把他作为右孩子
+				cur2->m_left = cur->m_left;
+			}
+			cur2->m_right = cur->m_right;
+			if (cur == m_root) {
+				m_root = cur2;
+			}
+			else {
+				if (cur == pre->m_left) {
+					pre->m_left = cur2;
+				}
+				else {
+					pre->m_right = cur2;
+				}
+			}
+		}
+		delete cur;
+		return true;
 	}
 };
 template<class T>
@@ -223,6 +281,10 @@ public:
 		stack<TreeNode<T>*> s;
 		vector<T> res;
 		TreeNode<T>* cur = root;
+		if (!cur) {
+			cout << "空树\n";
+			return;
+		}
 		while (cur) {
 			for (; cur; cur = cur->m_left) {
 				s.push(cur);
