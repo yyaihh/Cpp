@@ -42,5 +42,6 @@ int main() {
 	ht.insert(pair<int, int>(27, 13));
 	ht.insert(pair<int, int>(33, 13));
 	ht.insert(pair<int, int>(36, 13));
+	system("pause");
 	return 0;
 }

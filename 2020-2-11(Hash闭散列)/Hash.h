@@ -30,7 +30,7 @@ class HashTable {
 	//并没有记录哈希表的capacity的值, 因为m_table的size值就为其容量, 详见构造函数
 
 	size_t HashFun(const K& key) {//哈希函数,使用除留余数法
-		return SW()(key) % capacity();//仿函数先求出能够计算的整型(因为key值不一定是整型)
+		return SW(key) % capacity();//仿函数先求出能够计算的整型(因为key值不一定是整型)
 	}
 
 	void reserve() {
