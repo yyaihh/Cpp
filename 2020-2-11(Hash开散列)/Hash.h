@@ -51,7 +51,7 @@ class HashSet{
 
 public:
 	HashSet(const size_t capacity = s_m_primeTable[0]) :
-		m_table(capacity),
+		m_table(capacity, nullptr),
 		m_size(0),
 		m_primePos(0)
 	{}
