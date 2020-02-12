@@ -55,7 +55,9 @@ public:
 		m_size(0),
 		m_primePos(0)
 	{}
-
+	~HashSet() {
+		clear();
+	}
 	size_t capacity() {
 		return m_table.size();
 		//return s_m_primeTable[m_primePos];
