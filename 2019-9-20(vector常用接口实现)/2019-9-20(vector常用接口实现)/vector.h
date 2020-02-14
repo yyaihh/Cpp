@@ -12,8 +12,10 @@ public:
 	Vector(size_t n, const T& val);
 	Vector(size_t n);
 	Vector(const Vector<T>& x);
+	Vector(initializer_list<T> l);//C++11新增
 	~Vector();
 	Vector<T>& operator=(const Vector<T>& x);
+	Vector<T>& operator=(initializer_list<T> l);//C++11新增
 	size_t size();
 	size_t capacity();
 	void swap(Vector<T>& x);
@@ -107,7 +109,7 @@ public:
 template <class T>
 Vector<T>::Vector():m_size(0),
 m_capacity(0),
-m_data(new T[0])
+m_data(nullptr)
 {
 }
 template <class T>
@@ -124,6 +126,16 @@ Vector<T>::Vector(size_t n) :m_size(0),
 	{
 		for (size_t i = 0; i < m_capacity; m_data[i] = 0, ++i);
 	}
+template <class T>
+Vector<T>::Vector(initializer_list<T> l):
+	m_capacity(l.size()),
+	m_size(0),
+	m_data(new T[l.size()])
+{
+	for (auto& e : l) {
+		m_data[m_size++] = e;
+	}
+}//C++11新增
 template <class T>
 Vector<T>::Vector(const Vector<T>& x) :m_size(x.m_size),
 m_capacity(x.m_capacity),
@@ -152,6 +164,16 @@ Vector<T>& Vector<T>::operator=(const Vector<T>& x) {
 	memcpy(m_data, x.m_data, m_capacity * sizeof(T));
 	return *this;
 }
+template <class T>
+Vector<T>& Vector<T>::operator=(initializer_list<T> l) {
+	m_capacity = l.size();
+	m_size = 0;
+	m_data = new T[m_capacity];
+	for (auto& e : l) {
+		m_data[m_size++] = e;
+	}
+	return *this;
+}//C++11新增
 template <class T>
 void Vector<T>::push_back(const T& x) {
 	++m_size;
