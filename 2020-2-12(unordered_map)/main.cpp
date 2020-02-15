@@ -1,4 +1,6 @@
 #include<iostream>
+#include"unordered_map.h"
+#include<unordered_map>
 #include"HashBucket.h"
 using namespace std;
 
@@ -9,9 +11,8 @@ public:
 		return key;
 	}
 };
-
-int main() {
-	gh::HashBucket<int, int, KeyofValueint> hb;
+void test1() {
+	HashBucket<int, int, KeyofValueint> hb;
 	hb.insert(6);
 	hb.insert(9);
 	hb.insert(17);
@@ -27,8 +28,8 @@ int main() {
 	hb.insert(100);
 
 	hb.erase(9);
-	gh::iterator<int, int, KeyofValueint> begin;
-	gh::iterator<int, int, KeyofValueint> end;
+	Iterator<int, int, KeyofValueint> begin;
+	Iterator<int, int, KeyofValueint> end;
 	if (begin == end) {
 
 	}
@@ -36,6 +37,17 @@ int main() {
 	{
 		cout << e << endl;
 	}
-
+}
+void test2() {
+	gh::unordered_map<int, int> ump;
+	pair<int, int> p(10, 10);
+	pair<gh::unordered_map<int, int>::iterator, bool> p2 = ump.insert(p);
+	unordered_map<int, int> mp2;
+	mp2.erase(10);
+}
+int main() {
+	test1();
+	test2();
+	system("pause");
 	return 0;
 }
