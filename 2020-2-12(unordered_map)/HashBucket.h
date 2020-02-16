@@ -13,13 +13,12 @@ public:
 		m_next(nullptr)
 	{}
 
-	/*template<class K, class V, class KeyOfVal, class HF>
-	friend class Iterator;*/
+	template<class K, class V, class KeyOfVal, class HF>
+	friend class Iterator;
 
 	template<class K, class V, class KeyOfVal, class HF>
 	friend class HashBucket;
 };
-
 class dealInt {
 public:
 	int operator()(const int& key) {
@@ -30,7 +29,7 @@ public:
 template<class K, class V, class KeyOfVal, class HF = dealInt>
 class Iterator {
 public:
-	HashBucket<K, V, KeyOfVal, HF>* m_hbpos;//哪个桶
+	HashBucket<K, V, KeyOfVal, HF>* m_hbpos;//直到桶在哪儿, 方便找上一个或下一个桶
 	HashBucketNode<V>* m_node;//具体节点
 	Iterator(HashBucket<K, V, KeyOfVal, HF>* hbpos = nullptr, HashBucketNode<V>* node = nullptr) :
 		m_hbpos(hbpos),
@@ -51,10 +50,10 @@ public:
 	}
 
 	Iterator operator++() {
-		size_t tmp = m_node->m_val;
+		HashBucketNode<V>* t = m_node;
 		m_node = m_node->m_next;
 		if (!m_node) {//为空
-			tmp = m_hbpos->HashFunc(KeyOfVal()(tmp)) + 1;//下一个桶的下标
+			size_t tmp = m_hbpos->HashFunc(KeyOfVal()(t->m_val)) + 1;//下一个桶的下标
 			for (; tmp < m_hbpos->capacity(); ++tmp) {
 				if (m_hbpos->m_table[tmp]) {
 					m_node = m_hbpos->m_table[tmp];
@@ -66,32 +65,33 @@ public:
 	}
 
 	Iterator operator++(int) {
-		iostream tmp = *this;
+		Iterator tmp = *this;
 		this->operator++();
 		return tmp;
 	}
 
 	bool operator==(const Iterator& data) const {
-		return m_node == data.m_node && m_hbpos == data.m_hbpos;
+		return m_node == data.m_node;
 	}
 
 	bool operator!=(const Iterator& data) const {
-		return m_node != data.m_node || m_hbpos != data.m_hbpos;
+		return m_node != data.m_node;
 	}
 };
 template<class K, class V, class KeyOfVal, class HF = dealInt>
 class HashBucket {
-	vector<HashBucketNode<V> *> m_table;
+	vector<HashBucketNode<V>*> m_table;
 	size_t m_size;
 	static long long s_m_primeTable[30];
 	size_t m_primePos;
 
 	template<class K, class V, class KeyOfVal, class HF>
 	friend class Iterator;
+
 	typedef Iterator<K, V, KeyOfVal, HF> Iterator;
 
-	size_t HashFunc(const V& val) {
-		return HF()(val) % capacity();
+	size_t HashFunc(const K& key) {
+		return HF()(key) % capacity();
 	}
 
 	void checkCapacity() {
@@ -134,13 +134,13 @@ public:
 	Iterator end() {
 		return Iterator(this, nullptr);
 	}
-	Iterator insert(const V& val) {
+	pair<Iterator, bool> insert(const V& val) {
 		checkCapacity();//首先检查是否需要扩容
-		int k = HashFunc(val);
+		int k = HashFunc(KeyOfVal()(val));
 		HashBucketNode<V>* cur = m_table[k];
 		while (cur) {
-			if (cur->m_val == val) {
-				return Iterator(nullptr, nullptr);
+			if (KeyOfVal()(cur->m_val) == KeyOfVal()(val)) {
+				return pair<Iterator, bool>(Iterator(this, nullptr), false);
 			}
 			cur = cur->m_next;
 		}
@@ -148,47 +148,42 @@ public:
 		cur->m_next = m_table[k];
 		m_table[k] = cur;
 		++m_size;
-		return Iterator(this, m_table[k]);
+		return pair<Iterator, bool>(Iterator(this, m_table[k]), true);//因为是头插, 所以返回头
 	}
 
 	Iterator find(const K& Keyval) {
 		int k = HashFunc(Keyval);
-		for (HashBucketNode<V>* cur = m_table[k]; cur; cur = cur->m_next) {
-			if (cur->m_val == val) {
-				return Iterator(this, m_table[k]);
+		HashBucketNode<V>* cur;
+		for (cur = m_table[k]; cur; cur = cur->m_next) {
+			if (KeyOfVal()(cur->m_val) == Keyval) {
+				break;
 			}
 		}
-		return Iterator(nullptr, nullptr);
+		return Iterator(this, cur);
 	}
 
-	Iterator erase(const V& val) {
-		Iterator it = find(val);
-		HashBucketNode<V>* tmp = nullptr, *cur = nullptr;
-		if (it.m_node != nullptr) {//找到了, 可以删
-			int n = HashFunc(KeyOfVal()(val));
-			if (m_table[n]->m_val == val) {
-				tmp = m_table[n];
+	pair<Iterator, bool> erase(const K& Keyval) {
+		Iterator f = find(Keyval);
+		int n = HashFunc(Keyval);
+		if (f.m_node) {
+			Iterator tmp = f;
+			if (m_table[n] == f.m_node) {
 				m_table[n] = m_table[n]->m_next;
 			}
 			else {
-				for (cur = m_table[n]; cur->m_next; cur = cur->m_next) {
-					if (cur->m_next->m_val == val) {
-						tmp = cur->m_next;
+				for (HashBucketNode<V>* cur = m_table[n]; cur->m_next; cur = cur->m_next) {
+					if (cur->m_next == f.m_node) {
 						cur->m_next = cur->m_next->m_next;
 						break;
 					}
-
 				}
 			}
-			Iterator res(this, cur);
-			if (cur) {
-				++res;
-			}
+			++tmp;
+			delete f.m_node;
 			--m_size;
-			delete tmp;
-			return res;
+			return pair<Iterator, bool>(tmp, true);
 		}
-		return Iterator(nullptr, nullptr);
+		return pair<Iterator, bool>(Iterator(this, nullptr), false);
 	}
 
 	size_t size() {

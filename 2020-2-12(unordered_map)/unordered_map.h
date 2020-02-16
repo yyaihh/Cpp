@@ -10,10 +10,10 @@ namespace gh {
 				return V.first;
 			}
 		};
-		typedef HashBucket<K, V, KeyOfVal, HF> HB;
+		typedef HashBucket<K, ValueType, KeyOfVal, HF> HB;
 		HB m_data;
 	public:
-		typedef Iterator<K, V, KeyOfVal, HF> iterator;
+		typedef Iterator<K, ValueType, KeyOfVal, HF> iterator;
 		unordered_map() :m_data(HB()) {}
 		iterator begin() {
 			return m_data.begin();
@@ -27,15 +27,14 @@ namespace gh {
 		bool empty() {
 			return m_data.empty();
 		}
-		pair<iterator, bool> insert(const pair<K, V>& val) {
-			iterator tmp(insert(val.second));
-			if (!tmp.m_node) {
-				return pair<iterator, bool>(tmp, true);
-			}
-			return pair<iterator, bool>(tmp, false);
+		pair<iterator, bool> insert(const ValueType& val) {
+			return m_data.insert(val);
 		}
 		pair<iterator, bool> erase(const K& Keyval) {
-			return pair<iterator, bool>(m_data.erase(pair<K,V>))
+			return m_data.erase(Keyval);
+		}
+		iterator find(const K& Keyval) {
+			return m_data.find(Keyval);
 		}
 	};
 };
