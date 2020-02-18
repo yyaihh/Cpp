@@ -60,9 +60,40 @@ void test2() {
 		cout << e.first << "  " << e.second << endl;
 	}
 }
+void test3() {
+	gh::unordered_map<int, int> ump;
+	ump.insert(pair<int, int>(6, 10));
+	cout << "\n\n\n";
+	cout << ump[6] << endl;
+	cout << ump[10] << endl;
+}
+void test4() {
+	unordered_map<int, int> ump;
+	ump.insert(pair<int, int>(6, 10));
+	ump.insert(pair<int, int>(17, 12));
+	ump.insert(pair<int, int>(28, 13));
+	auto q = ump.insert(pair<int, int>(9, 30)).first;
+	ump.insert(pair<int, int>(17, 48));
+	ump.insert(pair<int, int>(16, 32));
+	ump.insert(pair<int, int>(19, 56));
+	ump.insert(pair<int, int>(27, 89));
+	ump.insert(pair<int, int>(61, 565));
+	pair<unordered_map<int, int>::iterator, bool> p = ump.insert(pair<int, int>(100, 89));
+	pair<unordered_map<int, int>::iterator, bool> p2 = ump.insert(pair<int, int>(100, 23));
+	cout << (*(p.first)).first << "  " << (*(p.first)).second << endl;
+	size_t a = ump.erase(6);
+	size_t b = ump.erase(17);
+	size_t c = ump.erase(10101);
+	cout << (*(p.first)).first << "  " << (*(p.first)).second << endl;
+	for (auto & e : ump) {
+		cout << e.first << "  " << e.second << endl;
+	}
+}
 int main() {
 	test1();
 	test2();
+	test3();
+	test4();
 	system("pause");
 	return 0;
 }

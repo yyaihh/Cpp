@@ -140,7 +140,7 @@ public:
 		HashBucketNode<V>* cur = m_table[k];
 		while (cur) {
 			if (KeyOfVal()(cur->m_val) == KeyOfVal()(val)) {
-				return pair<Iterator, bool>(Iterator(this, nullptr), false);
+				return pair<Iterator, bool>(Iterator(this, cur), false);
 			}
 			cur = cur->m_next;
 		}

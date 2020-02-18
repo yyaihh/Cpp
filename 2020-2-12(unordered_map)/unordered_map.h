@@ -27,6 +27,9 @@ namespace gh {
 		bool empty() {
 			return m_data.empty();
 		}
+		void clear() {
+			m_data.clear();
+		}
 		pair<iterator, bool> insert(const ValueType& val) {
 			return m_data.insert(val);
 		}
@@ -35,6 +38,15 @@ namespace gh {
 		}
 		iterator find(const K& Keyval) {
 			return m_data.find(Keyval);
+		}
+		V& operator[](const K& key) {
+			/*pair<iterator, bool> tmp = insert(ValueType(key, V()));
+			iterator tmp2 = tmp.first;
+			return (*tmp2).second;*/
+			return (*insert(ValueType(key, V())).first).second;
+		}
+		const V& operator[](const K& key) const {
+			return (*insert(ValueType(key, V())).first).second;
 		}
 	};
 };
