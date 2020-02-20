@@ -1,4 +1,4 @@
-#include<iostream>
+ï»¿#include<iostream>
 #include"rsa.h"
 using namespace std;
 
@@ -12,8 +12,8 @@ int main(){
 		<< "dkey:" << key.m_dkey << endl;
     while(cin>>data1){
         DataType data2 = rsa.encrypt(data1, key.m_ekey, key.m_nkey);
-		cout << "¼ÓÃÜºó:" << data2 << endl;
-		cout << "½âÃÜºó:" << rsa.decrypt(data2, key.m_dkey, key.m_nkey) << endl << endl;
+		cout << "åŠ å¯†åŽ:" << data2 << endl;
+		cout << "è§£å¯†åŽ:" << rsa.decrypt(data2, key.m_dkey, key.m_nkey) << endl << endl;
     }
     return 0;
 }
