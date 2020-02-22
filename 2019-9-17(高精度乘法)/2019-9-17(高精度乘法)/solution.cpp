@@ -27,9 +27,8 @@ string solution::multiply(const string& num1, const string& num2) {
 			t = stmp[tmp] + n % 10 - '0';//相加结果
 			stmp[tmp] = t % 10 + '0';//低位
 			stmp[tmp - 1] += (t / 10 + n / 10);//进位
-
 		}
-	}
+	} 
 	if (stmp[0] == '-') {
 		res.push_back('-');
 	}
