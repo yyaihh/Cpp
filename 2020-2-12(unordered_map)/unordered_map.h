@@ -48,5 +48,14 @@ namespace gh {
 		const V& operator[](const K& key) const {
 			return (*insert(ValueType(key, V())).first).second;
 		}
+		size_t bucket_count()const {//返回哈希桶中桶的个数
+			return m_data.bucket_count();
+		}
+		size_t bucket_size(size_t n)const {//返回n号桶中的元素个数
+			return m_data.bucket_size(n);
+		}
+		size_t bucket(const K& key) {//返回key对应几号桶
+			return m_data.bucket(key);
+		}
 	};
 };

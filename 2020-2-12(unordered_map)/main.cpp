@@ -12,6 +12,7 @@ public:
 };
 
 void test1() {
+	cout << "test1:\n";
 	HashBucket<int, int, KeyofValueint> hb;
 	hb.insert(6);
 	Iterator<int, int, KeyofValueint> q = hb.insert(9).first;
@@ -34,9 +35,9 @@ void test1() {
 	for (auto & e : hb) {
 		cout << e << endl;
 	}
-	cout << "\n\n\n\n";
 }
 void test2() {
+	cout << "\ntest2:\n";
 	gh::unordered_map<int, int> ump;
 	ump.insert(pair<int, int>(6, 10));
 	auto q = ump.insert(pair<int, int>(9, 30)).first;
@@ -63,11 +64,12 @@ void test2() {
 void test3() {
 	gh::unordered_map<int, int> ump;
 	ump.insert(pair<int, int>(6, 10));
-	cout << "\n\n\n";
+	cout << "\ntest3:\n";
 	cout << ump[6] << endl;
 	cout << ump[10] << endl;
 }
 void test4() {
+	cout << "\ntest4:\n";
 	unordered_map<int, int> ump;
 	ump.insert(pair<int, int>(6, 10));
 	ump.insert(pair<int, int>(17, 12));
@@ -89,11 +91,33 @@ void test4() {
 		cout << e.first << "  " << e.second << endl;
 	}
 }
+void test5() {
+	cout << "\ntest5:\n";
+	gh::unordered_map<int, int> ump;
+	ump.insert(pair<int, int>(6, 10));
+	ump.insert(pair<int, int>(9, 30));
+	ump.insert(pair<int, int>(17, 48));
+	ump.insert(pair<int, int>(16, 32));
+	ump.insert(pair<int, int>(19, 56));
+	ump.insert(pair<int, int>(27, 89));
+	ump.insert(pair<int, int>(61, 565));
+	ump.insert(pair<int, int>(98, 34));
+	ump.insert(pair<int, int>(26, 78));
+	ump.insert(pair<int, int>(63, 67));
+	ump.insert(pair<int, int>(39, 67));
+	ump.insert(pair<int, int>(28, 67));
+	ump.insert(pair<int, int>(100, 89));
+	ump.insert(pair<int, int>(100, 23));
+	cout << ump.bucket_count() << endl;
+	cout << ump.bucket_size(3) << endl;
+	cout << ump.bucket(98) << endl;
+}
 int main() {
 	test1();
 	test2();
 	test3();
 	test4();
+	test5();
 	system("pause");
 	return 0;
 }

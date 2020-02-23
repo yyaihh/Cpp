@@ -1,5 +1,4 @@
 #pragma once
-//增加迭代器版
 #include<vector>
 using namespace std;
 
@@ -206,10 +205,25 @@ public:
 			e = nullptr;
 		}
 	}
-
-	/*1、Count 判断某一个Key值是否在哈希表里
-	  2、BucketCount 返回桶的个数
-	  3、BucketSize 返回某个桶中的元素个数*/
+	size_t bucket_count()const {//返回哈希桶中桶的个数
+		size_t count = 0;
+		for (auto& i : m_table) {
+			if (i != nullptr) {
+				++count;
+			}
+		}
+		return count;
+	}
+	size_t bucket_size(size_t n)const {//返回n号桶中的元素个数
+		size_t count = 0;
+		for (HashBucketNode<V>* i = m_table[n]; i; i = i->m_next) {
+			++count;
+		}
+		return count;
+	}
+	size_t bucket(const K& key) {//返回key对应几号桶
+		return HashFunc(key);
+	}
 };
 template<class K, class V, class KeyofValue, class HF>
 long long HashBucket<K, V, KeyofValue, HF>::s_m_primeTable[30] = {
