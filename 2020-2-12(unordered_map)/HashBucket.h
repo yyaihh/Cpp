@@ -3,7 +3,7 @@
 using namespace std;
 
 template <class V>
-class HashBucketNode {
+class HashBucketNode {//元素节点
 public:
 	V m_val;
 	HashBucketNode * m_next;
@@ -24,7 +24,10 @@ public:
 		return key;
 	}
 };
-
+// K:关键码类型
+// V: 不同容器V的类型不同，如果是unordered_map，V代表一个键值对，如果是unordered_set,V 为 K
+// KeyOfValue: 因为V的类型不同，通过value取key的方式就不同, 所以可能需要传入自定义的方法
+// HF: 哈希函数仿函数对象类型，哈希函数使用除留余数法，需要将Key转换为整形数字才能取模
 template<class K, class V, class KeyOfVal, class HF = dealInt>
 class Iterator {
 public:
@@ -81,7 +84,7 @@ template<class K, class V, class KeyOfVal, class HF = dealInt>
 class HashBucket {
 	vector<HashBucketNode<V>*> m_table;
 	size_t m_size;
-	static long long s_m_primeTable[30];
+	static size_t s_m_primeTable[30];
 	size_t m_primePos;
 
 	template<class K, class V, class KeyOfVal, class HF>
@@ -93,7 +96,7 @@ class HashBucket {
 		return HF()(key) % capacity();
 	}
 
-	void checkCapacity() {
+	void checkCapacity() {//检查是否需要扩容, 若需要, 则扩容
 		int oldcapacity = capacity();
 		if (oldcapacity == m_size) {//此时哈希冲突发生概率100%, 此时扩容
 			vector<HashBucketNode<V>*> tmp(s_m_primeTable[++m_primePos]);
@@ -226,12 +229,12 @@ public:
 	}
 };
 template<class K, class V, class KeyofValue, class HF>
-long long HashBucket<K, V, KeyofValue, HF>::s_m_primeTable[30] = {
+size_t HashBucket<K, V, KeyofValue, HF>::s_m_primeTable[30] = {
 	11, 23, 47, 89, 179,
 	353, 709, 1409, 2819, 5639,
 	11273, 22531, 45061, 90121, 180233,
 	360457, 720899, 1441807, 2883593, 5767169,
 	11534351, 23068673, 46137359, 92274737, 184549429,
-	369098771, 738197549, 1476395029, 2952790016u, 4294967291u
+	369098771, 738197549, 1476395029, 2952790016ul, 429496729ul
 };
 	
