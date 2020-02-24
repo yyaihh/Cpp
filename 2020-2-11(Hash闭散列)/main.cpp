@@ -15,19 +15,13 @@ int main() {
 	ht.insert(pair<int, int>(27, 13));
 	ht.insert(pair<int, int>(33, 13));
 	ht.insert(pair<int, int>(36, 13));
-
 	ht.insert(pair<int, int>(27, 13));
 	ht.insert(pair<int, int>(33, 13));
 	ht.insert(pair<int, int>(36, 13));
-
 	ht.erase(33);
-
 	int n = ht.find(27);
 	int m = ht.find(222);
-
 	ht.clear();
-
-
 	ht.insert(pair<int, int>(1, 5));
 	ht.insert(pair<int, int>(2, 7));
 	ht.insert(pair<int, int>(5, 6));

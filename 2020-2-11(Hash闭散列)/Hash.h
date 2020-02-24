@@ -25,12 +25,12 @@ class HashTable {
 	};
 	vector <elem> m_table;
 	size_t m_size;
-	static long long s_m_primeTable[30];
+	static size_t s_m_primeTable[30];
 	int m_prime;
 	//并没有记录哈希表的capacity的值, 因为m_table的size值就为其容量, 详见构造函数
 
 	size_t HashFun(const K& key) {//哈希函数,使用除留余数法
-		return SW(key) % capacity();//仿函数先求出能够计算的整型(因为key值不一定是整型)
+		return SW()(key) % capacity();//仿函数先求出能够计算的整型(因为key值不一定是整型)
 	}
 
 	void reserve() {
@@ -130,11 +130,11 @@ public:
 	}
 };
 template <class K, class V, class SW>
-long long HashTable<K, V, SW>::s_m_primeTable[30] = {
+size_t HashTable<K, V, SW>::s_m_primeTable[30] = {
 		11,         23,         47,         89,        179,
 		353,        709,       1409,       2819,       5639,
 		11273,      22531,      45061,      90121,     180233,
 		360457,     720899,    1441807,    2883593,    5767169,
 		11534351,   23068673,   46137359,   92274737,  184549429,
-		369098771,  738197549, 1476395029, 2952790016u, 4294967291u 
+		369098771,  738197549, 1476395029, 2952790016ul, 429496729ul
 };
