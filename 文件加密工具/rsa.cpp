@@ -1,4 +1,5 @@
 #include<fstream>
+#include<vector>
 #include"rsa.h"
 using namespace std;
 
@@ -8,7 +9,7 @@ RSA::RSA() {
 bm::int1024_t RSA::getNkey(bm::int1024_t& prime1, bm::int1024_t& prime2) {
 	return prime1 * prime2;
 }
-bm::int1024_t RSA::getOrla(bm::int1024_t& prime1, bm::int1024_t& prime2) {//prime1å’Œprime2å¿…é¡»äº’è´¨
+bm::int1024_t RSA::getOrla(bm::int1024_t& prime1, bm::int1024_t& prime2) {//prime1ºÍprime2±ØÐë»¥ÖÊ
 	return (prime1 - 1) * (prime2 - 1);
 }
 bm::int1024_t RSA::getEkey(bm::int1024_t& orla) {
@@ -23,8 +24,7 @@ bm::int1024_t RSA::getEkey(bm::int1024_t& orla) {
 bm::int1024_t RSA::getDkey(bm::int1024_t& ekey, bm::int1024_t& orla) {
 	bm::int1024_t x, y;
 	exGcd(ekey, orla, &x, &y);
-	//å˜æ¢, è®©è§£å¯†å¯†é’¥æ˜¯ä¸€ä¸ªæ¯”è¾ƒå°çš„æ•°
-	return (x % orla + orla) % orla;
+	return (x % orla + orla) % orla;//±ä»», ÈÃ½âÃÜÃÜÔ¿ÊÇÒ»¸ö±È½ÏÐ¡µÄÊý
 }
 bm::int1024_t RSA::getGcd(bm::int1024_t num1, bm::int1024_t num2) {
 	bm::int1024_t num;
@@ -34,21 +34,20 @@ bm::int1024_t RSA::getGcd(bm::int1024_t num1, bm::int1024_t num2) {
 	}
 	return num2;
 }
-bm::int1024_t RSA::exGcd(bm::int1024_t a, bm::int1024_t b, bm::int1024_t* x, bm::int1024_t* y) {
+void RSA::exGcd(bm::int1024_t a, bm::int1024_t b, bm::int1024_t* x, bm::int1024_t* y) {
 	if (b == 0) {
 		*x = 1;
 		*y = 0;
-		return a;
+		return;
 	}
-	bm::int1024_t gcd = exGcd(b, a % b, x, y);
-	bm::int1024_t x1 = *x, y1 = *y;
-	*x = y1;
-	*y = x1 - a / b * y1;
-	return gcd;
+	exGcd(b, a % b, x, y);
+	bm::int1024_t tmp = *x;
+	*x = *y;
+	*y = tmp - a / b * (*y);
 }
 bm::int1024_t RSA::_encrypt(bm::int1024_t Ai, bm::int1024_t ekey, bm::int1024_t nkey) {
 	//data^ekey % nkey
-	//åªå’Œekeyçš„ä½æ•°æœ‰å…³
+	//Ö»ºÍekeyµÄÎ»ÊýÓÐ¹Ø
 	bm::int1024_t res = 1;
 	for (; ekey; ekey >>= 1) {
 		if (ekey & 1) {
@@ -62,7 +61,7 @@ bm::int1024_t RSA::_decrypt(bm::int1024_t data, bm::int1024_t dkey, bm::int1024_
 	return _encrypt(data, dkey, nkey);
 }
 bool RSA::isPrime(bm::int1024_t& num) {
-	br::mt11213b gen((size_t)time(0));
+	br::mt11213b gen((size_t)time(0));//ÒªºÍ²úÉúËæ»úÊýµÄ·¢ÉúÆ÷²»Ò»Ñù
 	if (miller_rabin_test(num, 25, gen)) {
 		if (miller_rabin_test((num - 1) / 2, 25, gen)) {
 			return true;
@@ -73,33 +72,66 @@ bool RSA::isPrime(bm::int1024_t& num) {
 bm::int1024_t RSA::GetPrime() {
 	bm::int1024_t res;
 	br::mt19937 gen((size_t)time(0));
-	br::uniform_int_distribution<bm::int1024_t> dist(bm::int1024_t(0), (bm::int1024_t(1) << 256));
-	do {
-		res = dist(gen);
-	} while (!isPrime(res));
+	br::uniform_int_distribution<bm::int1024_t> dist(bm::int1024_t(0), (bm::int1024_t(1) << SIZE));
+	while (!isPrime(res = dist(gen)));
 	return res;
 }
 void RSA::getKeys() {
-	bm::int1024_t prime1, prime2 = GetPrime();
-	while ((prime1 = GetPrime()) == prime2);
-	m_key.m_nkey = getNkey(prime1, prime2);
-	bm::int1024_t orla = getOrla(prime1, prime2);
-	m_key.m_ekey = getEkey(orla);
-	m_key.m_dkey = getDkey(m_key.m_ekey, orla);
+	FILE* fp;
+	if ((fp = fopen(SECRET_KEY_PATH, "r")) == NULL) {
+		cout << "Éú³ÉÃÜÔ¿, ¹«Ô¿ÖÐ...\n";
+		bm::int1024_t prime1, prime2 = GetPrime();
+		while ((prime1 = GetPrime()) == prime2);
+		m_key.m_nkey = getNkey(prime1, prime2);
+		bm::int1024_t orla = getOrla(prime1, prime2);
+		m_key.m_ekey = getEkey(orla);
+		m_key.m_dkey = getDkey(m_key.m_ekey, orla);
+		stringstream tmp;
+		tmp << m_key.m_nkey << '\n' << m_key.m_ekey << '\n' << m_key.m_dkey << '\n';
+		ofstream fout(SECRET_KEY_PATH, ofstream::binary);
+		if (fout.is_open() == false) {
+			perror("file open failed!");
+			return;
+		}
+		fout.write(tmp.str().c_str(), tmp.str().size());
+		if (fout.good() == false) {
+			cout << "file " << SECRET_KEY_PATH << " read data failed!\n";
+		}
+		fout.close();
+	}
+	else {
+		fseek(fp, 0L, SEEK_END);
+		size_t fsize = ftell(fp);
+		fclose(fp);
+		ifstream fin(SECRET_KEY_PATH, ifstream::binary);
+		if (fin.is_open() == false) {
+			perror("file open failed!");
+			return;
+		}
+		string buf;
+		buf.resize(fsize);
+		fin.read(&buf[0], fsize);
+		if (fin.good() == false) {
+			cout << "file " << SECRET_KEY_PATH << " read data failed!\n";
+		}
+		vector<string> secret_key;
+		//splitÓÃÓÚ·Ö¸î×Ö·û´®
+		boost::split(secret_key, buf, boost::is_any_of("\n"), boost::token_compress_on);
+		m_key.m_nkey = bm::int1024_t(secret_key[0]);
+		m_key.m_ekey = bm::int1024_t(secret_key[1]);
+		m_key.m_dkey = bm::int1024_t(secret_key[2]);
+		fin.close();
+	}
 }
-Key RSA::getKey() {
-	return m_key;
-}
-void RSA::encrypt(const char* filename, const char* outname) {
+bool RSA::encrypt(const string filename, const string outname) {
 	ifstream fin(filename, ifstream::binary);
 	ofstream fout(outname, ifstream::binary);
 	if (!fin.is_open()) {
 		perror("input file open failed!");
-		return;
+		return false;
 	}
 	char* buffer = new char[NUMBER];
 	bm::int1024_t* bufferOut = new bm::int1024_t[NUMBER];
-	//char* bufferOut = new char[NUMBER];
 	while (!fin.eof()) {
 		fin.read(buffer, NUMBER);
 		streamsize ret = fin.gcount();
@@ -112,15 +144,16 @@ void RSA::encrypt(const char* filename, const char* outname) {
 	delete[] buffer;
 	fin.close();
 	fout.close();
+	return true;
 }
-void RSA::decrypt(const char* filename, const char* outname) {
+bool RSA::decrypt(const string filename, const string outname) {
 	ifstream fin(filename, ifstream::binary);
 	ofstream fout(outname, ifstream::binary);
 	if (!fin.is_open()) {
 		perror("file open failed");
+		return false;
 	}
 	bm::int1024_t* buffer = new bm::int1024_t[NUMBER];
-	//char* buffer = new char[NUMBER];
 	char* bufferOut = new char[NUMBER];
 	while (!fin.eof()) {
 		fin.read((char*)buffer, NUMBER * sizeof(bm::int1024_t));
@@ -134,4 +167,5 @@ void RSA::decrypt(const char* filename, const char* outname) {
 	delete[] buffer;
 	fin.close();
 	fout.close();
+	return true;
 }
