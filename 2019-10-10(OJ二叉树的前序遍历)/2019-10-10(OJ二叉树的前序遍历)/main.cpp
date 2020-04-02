@@ -11,11 +11,11 @@ typedef struct TreeNode {
 class Solution {
 	vector<int>res;
 public:
-#if 0
+#if 1
 	vector<int> preorderTraversal(TreeNode* root) {
 		if (root) {
-			preorderTraversal(root->left);
 			res.push_back(root->val);
+			preorderTraversal(root->left);
 			preorderTraversal(root->right);
 		}
 		return res;
