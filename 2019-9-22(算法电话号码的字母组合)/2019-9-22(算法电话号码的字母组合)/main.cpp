@@ -29,36 +29,41 @@ using namespace std;
 //};
 class Solution {
 	static string str[8];
-	void dealletterCombinations(vector<string>& res, const string& s, int pos) {
-		int _size = s.size();
-		static string tmp(s.size(), 0);
-		if (pos < _size) {
-			for (auto i : str[s[pos] - '2']) {
+	vector<string>* pres;
+	const string* ps;
+	int size;
+	void dealletterCombinations(int pos) {
+		static string tmp(size, 0);
+		if (pos < size) {
+			for (auto i : str[(*ps)[pos] - '2']) {
 				tmp[pos] = i;
-				dealletterCombinations(res, s, pos + 1);
+				dealletterCombinations(pos + 1);
 			}
 		}
 		else {
-			res.push_back(tmp);
+			pres->push_back(tmp);
 		}
 	}
 public:
-	vector<string>& letterCombinations(const string& s) {
-		static vector<string> res;
+	vector<string> letterCombinations(const string& s) {
+		vector<string> res;
 		if (s.empty()) return res;
+		size = s.size();
+		pres = &res;
+		ps = &s;
 		for (auto i : s) {
 			if (i < '2') {
 				return res;
 			}
 		}
-		dealletterCombinations(res, s, 0);
+		dealletterCombinations(0);
 		return res;
 	}
 };
 string Solution::str[8] = { "abc","def","ghi","jkl","mno","pqrs","tuv","wxyz" };
 
 int main() {
-	string test = "23456789";
+	string test = "2";
 	Solution fun;
 	for (auto i : fun.letterCombinations(test)) {
 		cout << i << endl;
