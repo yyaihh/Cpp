@@ -5,8 +5,7 @@ using namespace std;
 class Solution {
 	void dealFindGreatestSumOfSubArray(vector<int>::iterator start, vector<int>::iterator end,
 		vector<int>::iterator End, int& sum) {
-		static int tmp = *start;
-		static vector<int>::iterator tmpend;
+		int tmp = *start;
 		if (end < End) {
 			if (start < end) {
 				if (sum < tmp) sum = tmp;
@@ -20,8 +19,7 @@ class Solution {
 		}
 		else {
 			if (start + 1 < End) {
-				tmpend = start + 2;
-				dealFindGreatestSumOfSubArray(start + 1, tmpend, End, sum);
+				dealFindGreatestSumOfSubArray(start + 1, start + 2, End, sum);
 			}
 		}
 	}

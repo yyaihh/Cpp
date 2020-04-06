@@ -4,7 +4,7 @@
 using namespace std;
 
 int main() {
-	int a[] = {-1,1,2};
+	int a[] = { 2, 8, 1, 5 ,9};
 	vector<int>arr(a, a + sizeof(a) / sizeof(a[0]));
 	Solution fun;
 	cout << fun.FindGreatestSumOfSubArray_2(arr) << endl;
