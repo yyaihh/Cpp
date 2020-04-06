@@ -34,6 +34,15 @@ public:
 	}
 };
 
+class solution {
+public:
+	int TreeDepth(TreeNode* pRoot) {
+		if (pRoot == nullptr) return 0;
+		int llen = TreeDepth(pRoot->left);
+		int rlen = TreeDepth(pRoot->right);
+		return (llen > rlen ? llen : rlen) + 1; 
+	}
+};
 int main() {
 	Solution s;
 	TreeNode root(1);
@@ -48,6 +57,8 @@ int main() {
 	b.left = &d;
 	b.right = &e;
 	vector<int> path;
-	s.judge(&root, path);
+	//s.judge(&root, path);
+	solution f;
+	cout << f.TreeDepth(&root);
 	return 0;
 }
