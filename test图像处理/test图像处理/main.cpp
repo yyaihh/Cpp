@@ -1,146 +1,3 @@
-//#include "opencv2/highgui/highgui.hpp"
-//#include "opencv2/imgproc/imgproc.hpp"
-//#include <time.h>
-//#include <iostream>
-//
-//using namespace cv;
-//using namespace std;
-//
-///*
-//* @brief 对输入图像进行细化,骨骼化
-//* @param src为输入图像,用cvThreshold函数处理过的8位灰度图像格式，元素中只有0与1,1代表有元素，0代表为空白
-//* @param dst为对src细化后的输出图像,格式与src格式相同，元素中只有0与1,1代表有元素，0代表为空白
-//*/
-//void thinImage(Mat & src, Mat & dst)
-//{
-//	int width = src.cols;
-//	int height = src.rows;
-//	src.copyTo(dst);
-//	vector<uchar *> mFlag; //用于标记需要删除的点    
-//	while (true)
-//	{
-//		//步骤一   
-//		for (int i = 0; i < height; ++i)
-//		{
-//			uchar * p = dst.ptr<uchar>(i);
-//			for (int j = 0; j < width; ++j)
-//			{
-//				//获得九个点对象，注意边界问题
-//				uchar p1 = p[j];
-//				if (p1 != 1) continue;
-//				uchar p2 = (i == 0) ? 0 : *(p - dst.step + j);
-//				uchar p3 = (i == 0 || j == width - 1) ? 0 : *(p - dst.step + j + 1);
-//				uchar p4 = (j == width - 1) ? 0 : *(p + j + 1);
-//				uchar p5 = (i == height - 1 || j == width - 1) ? 0 : *(p + dst.step + j + 1);
-//				uchar p6 = (i == height - 1) ? 0 : *(p + dst.step + j);
-//				uchar p7 = (i == height - 1 || j == 0) ? 0 : *(p + dst.step + j - 1);
-//				uchar p8 = (j == 0) ? 0 : *(p + j - 1);
-//				uchar p9 = (i == 0 || j == 0) ? 0 : *(p - dst.step + j - 1);
-//				if ((p2 + p3 + p4 + p5 + p6 + p7 + p8 + p9) >= 2 && (p2 + p3 + p4 + p5 + p6 + p7 + p8 + p9) <= 6)//条件1判断
-//				{
-//					//条件2计算
-//					int ap = 0;
-//					if (p2 == 0 && p3 == 1) ++ap;
-//					if (p3 == 0 && p4 == 1) ++ap;
-//					if (p4 == 0 && p5 == 1) ++ap;
-//					if (p5 == 0 && p6 == 1) ++ap;
-//					if (p6 == 0 && p7 == 1) ++ap;
-//					if (p7 == 0 && p8 == 1) ++ap;
-//					if (p8 == 0 && p9 == 1) ++ap;
-//					if (p9 == 0 && p2 == 1) ++ap;
-//					//条件2、3、4判断
-//					if (ap == 1 && p2 * p4 * p6 == 0 && p4 * p6 * p8 == 0)
-//					{
-//						//标记    
-//						mFlag.push_back(p + j);
-//					}
-//				}
-//			}
-//		}
-//		//将标记的点删除    
-//		for (vector<uchar *>::iterator i = mFlag.begin(); i != mFlag.end(); ++i)
-//		{
-//			**i = 0;
-//		}
-//		//直到没有点满足，算法结束    
-//		if (mFlag.empty())
-//		{
-//			break;
-//		}
-//		else
-//		{
-//			mFlag.clear();//将mFlag清空    
-//		}
-//
-//		//步骤二，根据情况该步骤可以和步骤一封装在一起成为一个函数
-//		for (int i = 0; i < height; ++i)
-//		{
-//			uchar * p = dst.ptr<uchar>(i);
-//			for (int j = 0; j < width; ++j)
-//			{
-//				//如果满足四个条件，进行标记    
-//				//  p9 p2 p3    
-//				//  p8 p1 p4    
-//				//  p7 p6 p5    
-//				uchar p1 = p[j];
-//				if (p1 != 1) continue;
-//				uchar p2 = (i == 0) ? 0 : *(p - dst.step + j);
-//				uchar p3 = (i == 0 || j == width - 1) ? 0 : *(p - dst.step + j + 1);
-//				uchar p4 = (j == width - 1) ? 0 : *(p + j + 1);
-//				uchar p5 = (i == height - 1 || j == width - 1) ? 0 : *(p + dst.step + j + 1);
-//				uchar p6 = (i == height - 1) ? 0 : *(p + dst.step + j);
-//				uchar p7 = (i == height - 1 || j == 0) ? 0 : *(p + dst.step + j - 1);
-//				uchar p8 = (j == 0) ? 0 : *(p + j - 1);
-//				uchar p9 = (i == 0 || j == 0) ? 0 : *(p - dst.step + j - 1);
-//				if ((p2 + p3 + p4 + p5 + p6 + p7 + p8 + p9) >= 2 && (p2 + p3 + p4 + p5 + p6 + p7 + p8 + p9) <= 6)
-//				{
-//					int ap = 0;
-//					if (p2 == 0 && p3 == 1) ++ap;
-//					if (p3 == 0 && p4 == 1) ++ap;
-//					if (p4 == 0 && p5 == 1) ++ap;
-//					if (p5 == 0 && p6 == 1) ++ap;
-//					if (p6 == 0 && p7 == 1) ++ap;
-//					if (p7 == 0 && p8 == 1) ++ap;
-//					if (p8 == 0 && p9 == 1) ++ap;
-//					if (p9 == 0 && p2 == 1) ++ap;
-//					if (ap == 1 && p2 * p4 * p8 == 0 && p2 * p6 * p8 == 0)
-//					{
-//						//标记    
-//						mFlag.push_back(p + j);
-//					}
-//				}
-//			}
-//		}
-//		//将标记的点删除    
-//		for (vector<uchar *>::iterator i = mFlag.begin(); i != mFlag.end(); ++i)
-//		{
-//			**i = 0;
-//		}
-//		//直到没有点满足，算法结束    
-//		if (mFlag.empty())
-//		{
-//			break;
-//		}
-//		else
-//		{
-//			mFlag.clear();//将mFlag清空    
-//		}
-//	}
-//}
-//
-//int main() {
-//	Mat src = imread("4.jpg", IMREAD_GRAYSCALE);
-//	GaussianBlur(src, src, Size(7, 7), 0, 0);//高斯滤波
-//	threshold(src, src, 140, 1, cv::THRESH_BINARY_INV);//二值化，前景为1，背景为0
-//	Mat dst;
-//	thinImage(src, dst);//图像细化（骨骼化）
-//	src = src * 255;
-//	imshow("原始图像", src);
-//	dst = dst * 255;
-//	imshow("细化图像", dst);
-//	waitKey(0);
-//	return 0;
-//}
 #include<iostream>
 #include <time.h>
 #include <opencv2/opencv.hpp>
@@ -169,38 +26,203 @@ using namespace cv;
 //CV_HAAR_DO_CANNY_PRUNING--函数将会使用Canny边缘检测来排除边缘过多或过少的区域,因为这些区域通常不会是人脸所在区域；
 //参数6、7：minSize和maxSize用来限制得到的目标区域的范围。
 
-void getfaceimg()//人脸图像获取
+//void getfaceimg()//人脸图像获取
+//{
+//	CascadeClassifier ccf;//创建脸部对象
+//	//string cascadeName = "haarcascade_frontalface_alt2.xml";//人脸检测模型，请在OpenCV文件夹中搜索
+//	string cascadeName = "result.xml";
+//	ccf.load(cascadeName);//读取opencv人脸检测模型
+//	vector<Rect> faces;//容器，存放检测到的人脸
+//	long time = clock();
+//	string path = "1.png";
+//	Mat img = imread(path, 0);
+//	imshow("原图", img);
+//	equalizeHist(img, img);//直方图均衡化
+//						   //imshow("直方图均衡化", img);
+//						   //人脸检测
+//	ccf.detectMultiScale(img, faces, 1.1, 3, 1, Size(50, 50), Size(500, 500));//人脸检测
+//	for (vector<Rect>::const_iterator iter = faces.begin(); iter != faces.end(); iter++)
+//	{
+//		rectangle(img, *iter, Scalar(0), 2, 8); //用矩形圈出人脸
+//	}
+//	//截取保存脸部图像
+//	Mat faceimg;
+//	vector<Rect>::const_iterator iter = faces.begin();
+//	faceimg = img(*iter);
+//	imshow("脸部图像", faceimg);
+//	imwrite("faceImg//" + path, faceimg);
+//	imshow("检测结果", img);
+//	waitKey(999999);
+//	cout << "花费时间：" << clock() - time << "ms" << endl;
+//}
+//
+//
+//int main()
+//{
+//	getfaceimg();//人脸图像获取
+//	return 0;
+//}
+
+#include <opencv2/opencv.hpp>
+#include <iostream>
+
+using namespace cv;
+using namespace cv::ml;
+using namespace std;
+
+string positive_dir = "./elec_pepole/positive/";
+string negative_dir = "./elec_pepole/negative/";
+string testPic = "./elec_pepole/test/1586268475(1).png";
+
+vector< float > get_svm_detector(const Ptr< SVM >& svm)
 {
-	CascadeClassifier ccf;//创建脸部对象
-	string cascadeName = "haarcascade_frontalface_alt2.xml";//人脸检测模型，请在OpenCV文件夹中搜索
-	ccf.load(cascadeName);//读取opencv人脸检测模型
-	vector<Rect> faces;//容器，存放检测到的人脸
-	long time = clock();
-	string path = "1.png";
-	Mat img = imread(path, 0);
-	imshow("原图", img);
-	equalizeHist(img, img);//直方图均衡化
-						   //imshow("直方图均衡化", img);
-						   //人脸检测
-	ccf.detectMultiScale(img, faces, 1.1, 3, 1, Size(50, 50), Size(500, 500));//人脸检测
-	for (vector<Rect>::const_iterator iter = faces.begin(); iter != faces.end(); iter++)
-	{
-		rectangle(img, *iter, Scalar(0), 2, 8); //用矩形圈出人脸
-	}
-	//截取保存脸部图像
-	Mat faceimg;
-	vector<Rect>::const_iterator iter = faces.begin();
-	faceimg = img(*iter);
-	imshow("脸部图像", faceimg);
-	imwrite("faceImg//" + path, faceimg);
-	imshow("检测结果", img);
-	waitKey(999999);
-	cout << "花费时间：" << clock() - time << "ms" << endl;
+	// get the support vectors
+	Mat sv = svm->getSupportVectors();
+	const int sv_total = sv.rows;
+	// get the decision function
+	Mat alpha, svidx;
+	double rho = svm->getDecisionFunction(0, alpha, svidx);
+
+	CV_Assert(alpha.total() == 1 && svidx.total() == 1 && sv_total == 1);
+	CV_Assert((alpha.type() == CV_64F && alpha.at<double>(0) == 1.) ||
+		(alpha.type() == CV_32F && alpha.at<float>(0) == 1.f));
+	CV_Assert(sv.type() == CV_32F);
+
+	vector< float > hog_detector(sv.cols + 1);
+	memcpy(&hog_detector[0], sv.ptr(), sv.cols * sizeof(hog_detector[0]));
+	hog_detector[sv.cols] = (float)-rho;
+	return hog_detector;
 }
 
+void svm_train(Mat &trainData, Mat &labels) {
+	printf("\n start SVM training... \n");
+	Ptr< SVM > svm = SVM::create();
+	/* Default values to train SVM */
+	svm->setGamma(5.383);
+	svm->setKernel(SVM::LINEAR);
+	svm->setC(2.67);
+	svm->setType(SVM::C_SVC);
+	svm->train(trainData, ROW_SAMPLE, labels);
+	clog << "...[done]" << endl;
 
-int main()
-{
-	getfaceimg();//人脸图像获取
+	// save xml
+	svm->save("./hog_elec.yml");
+}
+
+void get_hog_descripor(Mat &image, vector<float> &desc) {
+	HOGDescriptor hog;
+	int h = image.rows;
+	int w = image.cols;
+	float rate = 64.0 / w;
+	Mat img, gray;
+	resize(image, img, Size(64, int(rate*h)));
+	cvtColor(img, gray, COLOR_BGR2GRAY);
+	Mat result = Mat::zeros(Size(102, 128), CV_8UC1);
+	result = Scalar(127);
+	Rect roi;
+	roi.x = 0;
+	roi.width = 64;
+	roi.y = (128 - gray.rows) / 2;
+	roi.height = gray.rows;
+	gray.copyTo(result(roi));
+	hog.compute(result, desc, Size(8, 8), Size(0, 0));
+}
+
+void generate_dataset(Mat &trainData, Mat &labels) {
+	vector<string> images;
+	vector<vector<float>> vecDec;
+	vector<float> fv;
+	glob(positive_dir, images);
+	int posNum = images.size();
+	for (int i = 0; i < posNum; i++)
+	{
+		Mat image = imread(images[i].c_str());
+		vector<float> fv;
+		get_hog_descripor(image, fv);
+		printf("image path : %s, feature data length: %d \n", images[i].c_str(), fv.size());
+		vecDec.push_back(fv);
+	}
+	images.clear();
+	glob(negative_dir, images);
+	int negNum = images.size();
+	for (int i = 0; i < negNum; i++)
+	{
+		fv.clear();
+		Mat image = imread(images[i].c_str());
+		get_hog_descripor(image, fv);
+		printf("image path : %s, feature data length: %d \n", images[i].c_str(), fv.size());
+		vecDec.push_back(fv);
+	}
+	int trainDataNum = posNum + negNum;
+	int trainDataLen = fv.size();
+
+
+	Mat trainDataTemp(trainDataNum, trainDataLen, CV_32FC1);
+	Mat trainLabel(trainDataNum, 1, CV_32SC1);
+
+
+	for (int i = 0; i < trainDataNum; i++)
+	{
+		for (int j = 0; j < trainDataLen; j++)
+		{
+			trainDataTemp.at<float>(i, j) = vecDec[i][j];
+		}
+		if (i < posNum)
+		{
+			trainLabel.at<int>(i) = 1;
+		}
+		else
+		{
+			trainLabel.at<int>(i) = -1;
+		}
+	}
+
+	trainData = trainDataTemp.clone();
+	labels = trainLabel.clone();
+
+	return;
+}
+int main(int argc, char* argv[]) {
+	Mat trainData, labels;
+	generate_dataset(trainData, labels);
+	svm_train(trainData, labels);
+
+	Ptr<SVM> svm = SVM::load("./hog_elec.yml");
+	Mat test = imread(testPic);
+	resize(test, test, Size(0, 0), 0.20, 0.20);
+
+	imshow("input", test);
+	Rect winRect;
+	winRect.width = 64;
+	winRect.height = 128;
+	int sum_x = 0;
+	int sum_y = 0;
+	int count = 0;
+	for (int row = 64; row < test.rows - 64; row += 4) {
+		for (int col = 32; col < test.cols - 32; col += 4) {
+			winRect.x = col - 32;
+			winRect.y = row - 64;
+			vector<float> fv;
+			Mat hogRect = test(winRect);
+			get_hog_descripor(hogRect, fv);
+			Mat one_row = Mat::zeros(Size(fv.size(), 1), CV_32FC1);
+			for (int i = 0; i < fv.size(); i++) {
+				one_row.at<float>(0, i) = fv[i];
+			}
+			float result = svm->predict(one_row);
+			if (result > 0) {
+				// rectangle(test, winRect, Scalar(0, 0, 255), 1, 8, 0);
+				sum_x += winRect.x;
+				sum_y += winRect.y;
+				count++;
+			}
+		}
+	}
+	winRect.x = sum_x / count;
+	winRect.y = sum_y / count;
+	rectangle(test, winRect, Scalar(255, 0, 0), 1, 8, 0);
+	imshow("result", test);
+	waitKey(0);
 	return 0;
 }
+
