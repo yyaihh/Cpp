@@ -1,7 +1,7 @@
 #include<iostream>
 #include <time.h>
 #include <opencv2/opencv.hpp>
-#include <vector>//ÈÝÆ÷Í·ÎÄ¼þ 
+#include <vector>
 
 using namespace std;
 using namespace cv;
@@ -70,9 +70,9 @@ using namespace cv;
 using namespace cv::ml;
 using namespace std;
 
-string positive_dir = "./elec_pepole/positive/";
-string negative_dir = "./elec_pepole/negative/";
-string testPic = "./elec_pepole/test/1586268475(1).png";
+string positive_dir = "./elec_watch/positive/";
+string negative_dir = "./elec_watch/negative/";
+string testPic = "./elec_watch/test/scene_06.jpg";
 
 vector< float > get_svm_detector(const Ptr< SVM >& svm)
 {
