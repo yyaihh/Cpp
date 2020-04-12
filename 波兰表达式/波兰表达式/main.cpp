@@ -1,14 +1,10 @@
+// write your code here cpp
 #include<iostream>
 #include<stack>
+#include<queue>
 #include<vector>
 #include<string>
 using namespace std;
-//(a + b)*c - (a + b) / e的后缀表达式为：
-//(a + b)*c - (a + b) / e
-//→((a + b)*c)((a + b) / e) -
-//→((a + b)c*)((a + b)e / ) -
-//→(ab + c * )(ab + e / ) -
-//→ab + c * ab + e / -
 class Solution {
 public:
 	int evalRPN(vector<string>& tokens) {
@@ -17,7 +13,7 @@ public:
 		stack<int> num;
 		int leftnum, rightnum;
 		for (auto& str : tokens) {
-			if (str.size() > 1 || str[0] >= '0'&&str[0] <= '9') {
+			if (str.size() >1 || str[0] >= '0' && str[0] <= '9') {
 				num.push(atoi(str.c_str()));
 			}
 			else {
@@ -45,14 +41,14 @@ public:
 };
 
 int main() {
-	vector<string> tokens;
-	tokens.push_back("4");
-	tokens.push_back("13");
-	tokens.push_back("5");
-	tokens.push_back("/");
-	tokens.push_back("+");
-	Solution p;
-	cout << p.evalRPN(tokens) << endl;
-	system("pause");
-	return 0;
+	Solution s;
+	int n;
+	while (cin >> n) {
+		vector<string> vs(n);
+		for (auto& s : vs) {
+			cin >> s;
+		}
+
+		cout << s.evalRPN(vs) << endl;
+	}
 }
