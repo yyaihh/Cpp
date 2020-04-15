@@ -119,6 +119,7 @@
     <ClCompile Include="test.cpp" />
     <ClCompile Include="test2.cpp" />
     <ClCompile Include="test3.cpp" />
+    <ClCompile Include="test4.cpp" />
     <ClCompile Include="继承与对象组合.cpp" />
     <ClCompile Include="虚拟继承.cpp" />
   </ItemGroup>

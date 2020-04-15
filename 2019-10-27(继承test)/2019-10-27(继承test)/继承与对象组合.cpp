@@ -14,7 +14,7 @@ public:
 	B m_B;
 	int m_c;
 };
-int main() {
+int main_() {
 	C c;
 	c.m_B.m_A.m_a = 10;
 	c.m_B.m_b = 20;

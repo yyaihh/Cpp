@@ -19,7 +19,7 @@ void test2() {
 	Student* Sp = (Student*)Pp;
 	Sp->Print_Student();
 }
-int main_() {	
+int main__() {	
 	test1();
 	test2();
 	system("pause");

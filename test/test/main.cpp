@@ -358,12 +358,16 @@ int main() {
 		a[i] = *p2++;
 	printf("%d\n", a[2]);*/
 	//cout << func(15, 20);
-	int a11 = 1; 
+	/*int a11 = 1; 
 	int b11 = 2;
-	for (; a11 < 8; a11++)
-	{
+	for (; a11 < 8; a11++) {
 		b11 += a11; a11 += 2;
 	}
 	printf("%d£¬%d\n", a11, b11);
+*/
+	int mm = 2, nn = 0;
+	int tmp = mm > nn ? mm : nn;
+	cout << tmp << endl;
+	cout << (mm > nn) ? mm : nn;
 	return 0;
 }
