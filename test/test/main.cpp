@@ -323,51 +323,139 @@ int func(int i, int j)
 		return 1;
 	return 2 * func(i - 3, j / 2);
 }
-int main() {
-	//A a;
-	//A::fun(a);
-	//cout << func(1) << endl;
-	//int n = 2;
-	//const char *p = "abcdefgh", *r;
-	//long *q;
-	//q = (long*)p;
-	//q++;
-	//r = (char*)q;
-	//printf("%s\n", r);
-	//char str[] = "ABCD", *p1 = str;
-	//printf("%d\n", *(p1 + 4));
-	//Solution s;
-	//vector<int> v = {1, 2};
-	//cout << s.thirdMax(v) << endl;
-	//cout << f(4) << endl;
-	//int a = 4, b = 5, c = 6;
-	//printf("%d\n", fun(2 * a, fun(b, c)));
-	string a1 = "2147483648";
-	string b = "  0000000000012345678";
-	cout << myAtoi(a1) << endl;
-	vector<int> v = { 5,7,7,8,8,10 };
-	int n = 8;
-	/*for (auto &i : searchRange(v, n)) {
-		cout << i << ' ';
-	}*/
-	char s[] = "abcdefgh", *p = s;
-	p += 3;
-	//printf("%d\n", strlen(strcpy(p, "ABCD")));
-	/*int a[] = { 2,4,6,8 }, *p2 = a, i;
-	for (i = 0; i < 4; i++)
-		a[i] = *p2++;
-	printf("%d\n", a[2]);*/
-	//cout << func(15, 20);
-	/*int a11 = 1; 
-	int b11 = 2;
-	for (; a11 < 8; a11++) {
-		b11 += a11; a11 += 2;
+//int main() {
+//	//A a;
+//	//A::fun(a);
+//	//cout << func(1) << endl;
+//	//int n = 2;
+//	//const char *p = "abcdefgh", *r;
+//	//long *q;
+//	//q = (long*)p;
+//	//q++;
+//	//r = (char*)q;
+//	//printf("%s\n", r);
+//	//char str[] = "ABCD", *p1 = str;
+//	//printf("%d\n", *(p1 + 4));
+//	//Solution s;
+//	//vector<int> v = {1, 2};
+//	//cout << s.thirdMax(v) << endl;
+//	//cout << f(4) << endl;
+//	//int a = 4, b = 5, c = 6;
+//	//printf("%d\n", fun(2 * a, fun(b, c)));
+//	string a1 = "2147483648";
+//	string b = "  0000000000012345678";
+//	cout << myAtoi(a1) << endl;
+//	vector<int> v = { 5,7,7,8,8,10 };
+//	int n = 8;
+//	/*for (auto &i : searchRange(v, n)) {
+//		cout << i << ' ';
+//	}*/
+//	char s[] = "abcdefgh", *p = s;
+//	p += 3;
+//	//printf("%d\n", strlen(strcpy(p, "ABCD")));
+//	/*int a[] = { 2,4,6,8 }, *p2 = a, i;
+//	for (i = 0; i < 4; i++)
+//		a[i] = *p2++;
+//	printf("%d\n", a[2]);*/
+//	//cout << func(15, 20);
+//	/*int a11 = 1; 
+//	int b11 = 2;
+//	for (; a11 < 8; a11++) {
+//		b11 += a11; a11 += 2;
+//	}
+//	printf("%d，%d\n", a11, b11);
+//*/
+//	int mm = 2, nn = 0;
+//	int tmp = mm > nn ? mm : nn;
+//	cout << tmp << endl;
+//	cout << (mm > nn) ? mm : nn;
+//	return 0;
+//}
+#include<iostream>
+using namespace std;
+class Point{
+public:
+	int x, y;
+	Point(int x_, int y_) :
+		x(x_), y(y_) 
+	{}
+	Point(const Point& val) :
+		x(val.x), y(val.y)
+	{}
+};
+class Line {
+	Point a, b;
+	int dist;
+public:
+	Line(int a1, int b1, int a2, int b2):
+		a(a1, b1), b(a2, b2)
+	{
+		dist = (int)sqrt((a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y));
 	}
-	printf("%d，%d\n", a11, b11);
-*/
-	int mm = 2, nn = 0;
-	int tmp = mm > nn ? mm : nn;
-	cout << tmp << endl;
-	cout << (mm > nn) ? mm : nn;
+	Line(const Point& _a, const Point& _b) :
+		a(_a), b(_b)
+	{
+		dist = (int)sqrt((a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y));
+	}
+	Line(const Line& val) :
+		a(val.a), b(val.b)
+	{
+		dist = (int)sqrt((a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y));
+	}
+	int distance() { return dist; }
+};
+class Triangle {
+	Line l1, l2, l3;
+	int dist_1, dist_2, dist_3;
+public:
+	Triangle(int a1, int b1, int a2, int b2, int a3, int b3) :
+		l1(a1, b1, a2, b2), l2(a2, b2, a3, b3), l3(a1, b1, a3, b3)
+	{
+		dist_1 = l1.distance(), dist_2 = l2.distance(), dist_3 = l3.distance();
+	}
+	Triangle(const Point& a, const Point& b, const Point& c) :
+		l1(a, b), l2(b, c), l3(a, c)
+	{
+		dist_1 = l1.distance(), dist_2 = l2.distance(), dist_3 = l3.distance();
+	}
+	Triangle(const Line& a, const Line& b, const Line& c) :
+		l1(a), l2(b), l3(c)
+	{
+		dist_1 = l1.distance(), dist_2 = l2.distance(), dist_3 = l3.distance();
+	}
+	Triangle(const Triangle& val) :
+		l1(val.l1), l2(val.l2), l3(val.l3)
+	{
+		dist_1 = l1.distance(), dist_2 = l2.distance(), dist_3 = l3.distance();
+	}
+	bool IsTriangle() {
+		if (dist_1 + dist_2 < dist_3) return false;
+		if (dist_2 + dist_3 < dist_1) return false;
+		if (dist_1 + dist_3 < dist_2) return false;
+		return true;
+	}
+	int area() {
+		if (IsTriangle() == false) return -1;//不是三角形
+		int p = (dist_1 + dist_2 + dist_3) / 2;
+		return (int)sqrt(p*(p - dist_1)*(p - dist_2)*(p - dist_3));
+	}
+};
+
+int main() {
+	Point a(0, 0), b(0, 3), c(4, 0);
+	Line l(a, b);
+	Line l2(0, 0, 4, 0);
+	Line l3(0, 3, 4, 0);
+	Triangle t(a, b, c);
+	Triangle t2(l, l2, l3);
+	Triangle t3(0, 0, 0, 3, 4, 0);
+	t.IsTriangle() ? cout << "能构成三角型\n" : cout << "不能构成三角形\n";
+	cout << "面积是:" <<t.area() << endl;
+	t2.IsTriangle() ? cout << "能构成三角型\n" : cout << "不能构成三角形\n";
+	cout << "面积是:" << t2.area() << endl;
+	t3.IsTriangle() ? cout << "能构成三角型\n" : cout << "不能构成三角形\n";
+	cout << "面积是:" << t3.area() << endl;
 	return 0;
 }
+
+
