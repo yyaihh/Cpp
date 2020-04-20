@@ -371,91 +371,40 @@ int func(int i, int j)
 //	cout << (mm > nn) ? mm : nn;
 //	return 0;
 //}
-#include<iostream>
-using namespace std;
-class Point{
-public:
-	int x, y;
-	Point(int x_, int y_) :
-		x(x_), y(y_) 
-	{}
-	Point(const Point& val) :
-		x(val.x), y(val.y)
-	{}
-};
-class Line {
-	Point a, b;
-	int dist;
-public:
-	Line(int a1, int b1, int a2, int b2):
-		a(a1, b1), b(a2, b2)
-	{
-		dist = (int)sqrt((a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y));
+#include<cmath>
+double fun1(double a) {
+	double x0, x1;
+	x0 = a / 2;
+	x1 = (x0 + a / x0) / 2;
+	while (fabs(x0 - x1) >= 1e-5) {
+		x0 = x1;
+		x1 = (x0 + a / x0) / 2;
 	}
-	Line(const Point& _a, const Point& _b) :
-		a(_a), b(_b)
-	{
-		dist = (int)sqrt((a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y));
+	return x1;
+}
+double fun2(double a) {
+	double left = 0, right = a, mid, tmp;
+	while (right - left >= 1e-5) {
+		mid = left + (right - left) / 2;
+		tmp = mid * mid;
+		if (tmp > a) {
+			right = mid;
+		}
+		else if(tmp < a){
+			left = mid;
+		}
+		else {
+			break;
+		}
 	}
-	Line(const Line& val) :
-		a(val.a), b(val.b)
-	{
-		dist = (int)sqrt((a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y));
-	}
-	int distance() { return dist; }
-};
-class Triangle {
-	Line l1, l2, l3;
-	int dist_1, dist_2, dist_3;
-public:
-	Triangle(int a1, int b1, int a2, int b2, int a3, int b3) :
-		l1(a1, b1, a2, b2), l2(a2, b2, a3, b3), l3(a1, b1, a3, b3)
-	{
-		dist_1 = l1.distance(), dist_2 = l2.distance(), dist_3 = l3.distance();
-	}
-	Triangle(const Point& a, const Point& b, const Point& c) :
-		l1(a, b), l2(b, c), l3(a, c)
-	{
-		dist_1 = l1.distance(), dist_2 = l2.distance(), dist_3 = l3.distance();
-	}
-	Triangle(const Line& a, const Line& b, const Line& c) :
-		l1(a), l2(b), l3(c)
-	{
-		dist_1 = l1.distance(), dist_2 = l2.distance(), dist_3 = l3.distance();
-	}
-	Triangle(const Triangle& val) :
-		l1(val.l1), l2(val.l2), l3(val.l3)
-	{
-		dist_1 = l1.distance(), dist_2 = l2.distance(), dist_3 = l3.distance();
-	}
-	bool IsTriangle() {
-		if (dist_1 + dist_2 < dist_3) return false;
-		if (dist_2 + dist_3 < dist_1) return false;
-		if (dist_1 + dist_3 < dist_2) return false;
-		return true;
-	}
-	int area() {
-		if (IsTriangle() == false) return -1;//不是三角形
-		int p = (dist_1 + dist_2 + dist_3) / 2;
-		return (int)sqrt(p*(p - dist_1)*(p - dist_2)*(p - dist_3));
-	}
-};
-
+	return mid;
+}
 int main() {
-	Point a(0, 0), b(0, 3), c(4, 0);
-	Line l(a, b);
-	Line l2(0, 0, 4, 0);
-	Line l3(0, 3, 4, 0);
-	Triangle t(a, b, c);
-	Triangle t2(l, l2, l3);
-	Triangle t3(0, 0, 0, 3, 4, 0);
-	t.IsTriangle() ? cout << "能构成三角型\n" : cout << "不能构成三角形\n";
-	cout << "面积是:" <<t.area() << endl;
-	t2.IsTriangle() ? cout << "能构成三角型\n" : cout << "不能构成三角形\n";
-	cout << "面积是:" << t2.area() << endl;
-	t3.IsTriangle() ? cout << "能构成三角型\n" : cout << "不能构成三角形\n";
-	cout << "面积是:" << t3.area() << endl;
+	double a;
+	while (cin >> a) {
+		cout << fun1(a) << endl;
+		cout << fun2(a) << endl;
+		cout << sqrt(a) << endl;
+	}
 	return 0;
 }
-
-
